@@ -8,6 +8,7 @@ import time
 run: bool
 clicks: list
 
+
 def on_click(mouse_event):
     global run
     global clicks
@@ -24,7 +25,7 @@ def on_click(mouse_event):
                 # print(f'moveToDelayClick({x}, {y})')
                 if isinstance(clicks, list):
                     print(f'learned ({x},{y})')
-                    clicks.append((x,y))
+                    clicks.append((x, y))
     elif isinstance(mouse_event, mouse.MoveEvent):
         # print("MoveEvent")
         # print(".", end="")
@@ -39,43 +40,45 @@ def on_click(mouse_event):
         # print("Other event")
         pass
 
-def moveToDelayClick(x, y, delay=0.5):
+
+def move_to_delay_click(x, y, delay=0.5):
     mouse.move(x, y)
     time.sleep(delay)
     pyautogui.click(x, y)
 
 
-def doClickSequence2():
-    moveToDelayClick(1368, 109)
+def do_click_sequence2():
+    move_to_delay_click(1368, 109)
     time.sleep(1)
-    moveToDelayClick(696, 23)
+    move_to_delay_click(696, 23)
     time.sleep(1)
-    moveToDelayClick(1477, 109)
+    move_to_delay_click(1477, 109)
     time.sleep(1)
     sys.exit()
 
-def doClickSequenceMintFHDW():
-    moveToDelayClick(1466, 568)
+
+def do_click_sequence_mint_fhdw():
+    move_to_delay_click(1466, 568)
     time.sleep(3)
-    moveToDelayClick(1500, 703)
+    move_to_delay_click(1500, 703)
     time.sleep(5)
-    moveToDelayClick(1626, 814)
+    move_to_delay_click(1626, 814)
     time.sleep(43)
-    moveToDelayClick(1502, 748)
+    move_to_delay_click(1502, 748)
     time.sleep(3)
 
 
-def clickSequenceMinting():
+def click_sequence_minting():
     for i in range(1, 80):
         if i == 79:
             break
         print(i)
-        doClickSequenceMintFHDW()
+        do_click_sequence_mint_fhdw()
 
 
-def doClickSequence(clicks, delay_between_clicks):
-    n = len(clicks)
-    for x, y in clicks:
+def do_click_sequence(click_sequence: list[tuple[int, int]], delay_between_clicks: int) -> None:
+    n = len(click_sequence)
+    for x, y in click_sequence:
         print(f'do click at {x},{y}')
         mouse.move(x, y)
         time.sleep(0.5)
@@ -86,7 +89,7 @@ def doClickSequence(clicks, delay_between_clicks):
             time.sleep(delay_between_clicks)
 
 
-def learnClicks() -> list:
+def learn_clicks() -> list[tuple[int, int]]:
     global run
     global clicks
     print("learning clicks ...\nFinish with click at top line.")
@@ -99,9 +102,8 @@ def learnClicks() -> list:
     return clicks
 
 
-clicks = learnClicks()
+clicks = learn_clicks()
 print(f"start clicking at {clicks} in 30 seconds ...")
 time.sleep(30)
-doClickSequence(clicks, delay_between_clicks=220)
+do_click_sequence(clicks, delay_between_clicks=220)
 print("finished")
-
