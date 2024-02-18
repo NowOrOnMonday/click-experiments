@@ -2,7 +2,8 @@ import time
 import sys
 from click_sequence_utilities import move_to_delay_click
 
-def do_click_sequence2():
+
+def do_click_sequence2() -> None:
     move_to_delay_click(1368, 109)
     time.sleep(1)
     move_to_delay_click(696, 23)
@@ -12,7 +13,7 @@ def do_click_sequence2():
     sys.exit()
 
 
-def do_click_sequence_mint_fhdw():
+def do_click_sequence_mint_fhdw() -> None:
     move_to_delay_click(1466, 568)
     time.sleep(3)
     move_to_delay_click(1500, 703)
@@ -23,7 +24,7 @@ def do_click_sequence_mint_fhdw():
     time.sleep(3)
 
 
-def click_sequence_minting():
+def click_sequence_minting() -> None:
     for i in range(1, 80):
         if i == 79:
             break
