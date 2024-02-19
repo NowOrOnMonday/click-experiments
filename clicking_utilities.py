@@ -54,7 +54,7 @@ def click_coordinates(coordinates: list[tuple[int, int]], delay_between_clicks: 
 def learn_clicks() -> list[tuple[int, int]]:
     global run
     global clicks
-    print("learning clicks (left or right click)...\nfinish learning with click in top range of screen")
+    print("learning clicks: click left or right\nfinish learning with click in top range of screen")
     clicks = []
     mouse.hook(on_click)
     run = True
