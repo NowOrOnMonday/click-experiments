@@ -38,9 +38,9 @@ def move_delay_click(x: int, y: int, delay: float = 0.5) -> None:
     pyautogui.click(x, y)
 
 
-def click_at_coordinates(coordinates: list[tuple[int, int]], delay_between_clicks: int) -> None:
-    n = len(coordinates)
-    for x, y in coordinates:
+def click_at_coordinates(p_coordinates: list[tuple[int, int]], delay_between_clicks: int) -> None:
+    n = len(p_coordinates)
+    for x, y in p_coordinates:
         print(f'click at {x},{y}')
         mouse.move(x, y)
         time.sleep(0.5)
@@ -64,8 +64,14 @@ def learn_coordinates() -> list[tuple[int, int]]:
     return coordinates
 
 
-coordinates = learn_coordinates()
-print(f"start clicking at {coordinates} in 30 seconds ...")
-time.sleep(30)
-click_at_coordinates(coordinates, delay_between_clicks=220)
-print("finished")
+def main() -> None:
+    result_coordinates = learn_coordinates()
+    initial_wait_time = 10
+    print(f"start clicking at {result_coordinates} in {initial_wait_time} seconds ...")
+    time.sleep(initial_wait_time)
+    click_at_coordinates(result_coordinates, delay_between_clicks=220)
+    print("finished")
+
+
+main()
+
