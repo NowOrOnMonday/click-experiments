@@ -6,12 +6,12 @@ import mouse
 import time
 
 run: bool
-clicks: list
+coordinates: list
 
 
 def on_click(mouse_event) -> None:
     global run
-    global clicks
+    global coordinates
     if isinstance(mouse_event, mouse.ButtonEvent):
         # print("ButtonEvent")
         if mouse_event.event_type == mouse.DOWN:
@@ -21,9 +21,9 @@ def on_click(mouse_event) -> None:
             else:
                 # print(f"Current mouse position: x={x}, y={y}")
                 # print(f'moveToDelayClick({x}, {y})')
-                if isinstance(clicks, list):
+                if isinstance(coordinates, list):
                     print(f'learned ({x},{y})')
-                    clicks.append((x, y))
+                    coordinates.append((x, y))
     elif isinstance(mouse_event, mouse.MoveEvent):
         pass
     elif isinstance(mouse_event, mouse.WheelEvent):
@@ -38,7 +38,7 @@ def move_delay_click(x: int, y: int, delay: float = 0.5) -> None:
     pyautogui.click(x, y)
 
 
-def click_coordinates(coordinates: list[tuple[int, int]], delay_between_clicks: int) -> None:
+def click_at_coordinates(coordinates: list[tuple[int, int]], delay_between_clicks: int) -> None:
     n = len(coordinates)
     for x, y in coordinates:
         print(f'click at {x},{y}')
@@ -51,21 +51,21 @@ def click_coordinates(coordinates: list[tuple[int, int]], delay_between_clicks: 
             time.sleep(delay_between_clicks)
 
 
-def learn_clicks() -> list[tuple[int, int]]:
+def learn_coordinates() -> list[tuple[int, int]]:
     global run
-    global clicks
+    global coordinates
     print("learning clicks: click left or right\nfinish learning with click in top range of screen")
-    clicks = []
+    coordinates = []
     mouse.hook(on_click)
     run = True
     while run:
         mouse.wait()
     mouse.unhook(on_click)
-    return clicks
+    return coordinates
 
 
-clicks = learn_clicks()
-print(f"start clicking at {clicks} in 30 seconds ...")
+coordinates = learn_coordinates()
+print(f"start clicking at {coordinates} in 30 seconds ...")
 time.sleep(30)
-click_coordinates(clicks, delay_between_clicks=220)
+click_at_coordinates(coordinates, delay_between_clicks=220)
 print("finished")
