@@ -3,13 +3,14 @@ import pyautogui
 # import os
 # import sys
 import mouse
+# from mouse import ButtonEvent, MoveEvent, WheelEvent
 import time
 
 run: bool
 coordinates: list
 
 
-def on_click(mouse_event) -> None:
+def on_click(mouse_event: mouse.ButtonEvent | mouse.MoveEvent | mouse.WheelEvent) -> None:
     global run
     global coordinates
     if isinstance(mouse_event, mouse.ButtonEvent):
@@ -74,4 +75,3 @@ def main() -> None:
 
 
 main()
-
