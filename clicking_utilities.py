@@ -68,9 +68,10 @@ def learn_coordinates() -> list[tuple[int, int]]:
 def main() -> None:
     result_coordinates = learn_coordinates()
     initial_wait_time = 10
+    delay_between_clicks = 220
     print(f"start clicking at {result_coordinates} in {initial_wait_time} seconds ...")
     time.sleep(initial_wait_time)
-    click_at_coordinates(result_coordinates, delay_between_clicks=220)
+    click_at_coordinates(result_coordinates, delay_between_clicks=delay_between_clicks)
     print("finished")
 
 
