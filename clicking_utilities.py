@@ -161,6 +161,86 @@ def get_center_coordinate_of_image(image_path: str) -> None | tuple[int, int]:
     return result
 
 
+def get_top_left_coordinate_of_factory(factory_id: int) -> None | tuple[int, int]:
+    if factory_id not in [1,2,3,4,5,6]:
+        result = None
+        print(f'factory {factory_id} not found.')
+    else:
+        try:
+            image_path  = "assets/iconFabriken.png"
+            coordinate = pyautogui.locateCenterOnScreen(image_path, confidence=0.99)
+            x, y = coordinate.x-201, coordinate.y+34   # factory 1
+            offsets = [(0, 0), (150, 0), (300, 0), (0, 200), (150, 200), (300, 200)]
+            result = (x + offsets[factory_id-1][0], y + offsets[factory_id-1][1])
+        except ImageNotFoundException:
+            result = None
+            print(f'factory {factory_id} not found.')
+    return result
+
+
+def click_on_factory(factory_id: int) -> bool:
+    coord = get_top_left_coordinate_of_factory(factory_id)
+    if coord:
+        x, y = coord
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        time.sleep(1)
+        result = True
+    else:
+        result = False
+    return result
+
+
+def click_on_repair_factory(factory_id: int) -> bool:
+    coord = get_top_left_coordinate_of_factory(factory_id)
+    if coord:
+        x, y = coord
+        x, y = x + 108, y + 141
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        time.sleep(1)
+        result = True
+    else:
+        result = False
+    return result
+
+
+def click_on_button_AllesAbholen_if_present() -> bool:
+    png_image_path = "assets/buttonAllesAbholen.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        print(f'clicked on {png_image_path} at ({x}, {y}).')
+        result = True
+    else:
+        print(f"{png_image_path} not found. no click.")
+        result = False
+    return result
+
+
+def click_on_button_AllesProduzieren_if_present() -> None:
+    png_image_path = "assets/buttonAllesProduzieren.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        print(f'clicked on {png_image_path} at ({x}, {y}).')
+        result = True
+    else:
+        print(f"{png_image_path} not found. no click.")
+        result = False
+    return result
+
+
 def main() -> None:
     result_coordinates = learn_coordinates()
     initial_wait_time = 10
@@ -177,7 +257,7 @@ def main2() -> None:
     print("finished main2")
 
 
-if __name__ == "__main__":
+def main3() -> None:
     png_image_path = "assets/buttonAlleBeenden.png"
     png_image_path = "assets/buttonAllesAbholen.png"
     result = get_center_coordinate_of_image(png_image_path)
@@ -189,3 +269,22 @@ if __name__ == "__main__":
         mouse.move(x, y)
     else:
         print(f"{png_image_path} not found")
+
+
+if __name__ == "__main__":
+    # main2()
+    # for factory_id in range(1, 7):
+    #     click_on_repair_factory(factory_id)
+    #     time.sleep(1)
+    while True:
+        for factory_id in range(1, 7):
+            if click_on_factory(factory_id):
+                time.sleep(2)
+                click_on_button_AllesAbholen_if_present()
+                time.sleep(2)
+                click_on_repair_factory(factory_id)
+                time.sleep(2)
+                click_on_button_AllesProduzieren_if_present()
+            else:
+                print(f'factory {factory_id} not found.')
+            time.sleep(2)
