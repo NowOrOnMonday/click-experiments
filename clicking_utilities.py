@@ -174,7 +174,6 @@ def get_top_left_coordinate_of_factory(factory_id: int) -> None | tuple[int, int
             result = (x + offsets[factory_id-1][0], y + offsets[factory_id-1][1])
         except ImageNotFoundException:
             result = None
-            print(f'factory {factory_id} not found.')
     return result
 
 
@@ -187,12 +186,14 @@ def click_on_factory(factory_id: int) -> bool:
         pyautogui.click(x, y)
         time.sleep(1)
         result = True
+        print(f'clicked on factory {factory_id}.')
     else:
         result = False
+        print(f'factory {factory_id} not found.')
     return result
 
 
-def click_on_repair_factory(factory_id: int) -> bool:
+def click_on_button_repair_factory(factory_id: int) -> bool:
     coord = get_top_left_coordinate_of_factory(factory_id)
     if coord:
         x, y = coord
@@ -202,8 +203,10 @@ def click_on_repair_factory(factory_id: int) -> bool:
         pyautogui.click(x, y)
         time.sleep(1)
         result = True
+        print(f'clicked on repair factory {factory_id}.')
     else:
         result = False
+        print(f'repair button of factory {factory_id} not found. no click.')
     return result
 
 
@@ -282,7 +285,7 @@ if __name__ == "__main__":
                 time.sleep(2)
                 click_on_button_AllesAbholen_if_present()
                 time.sleep(2)
-                click_on_repair_factory(factory_id)
+                click_on_button_repair_factory(factory_id)
                 time.sleep(2)
                 click_on_button_AllesProduzieren_if_present()
             else:
