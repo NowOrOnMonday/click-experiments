@@ -1,2 +1,5 @@
 mouse
 pyautogui
+pillow
+numpy
+opencv-contrib-python
