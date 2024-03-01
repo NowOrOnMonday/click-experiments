@@ -1,13 +1,15 @@
 import pyautogui
 # from pynput.mouse import Listener, Button
 # import os
-# import sys
+import sys
 import mouse
 # from mouse import ButtonEvent, MoveEvent, WheelEvent
 import time
 import cv2 as cv
 import numpy as np
 from pyautogui import ImageNotFoundException
+from PIL import Image
+
 
 run: bool
 coordinates: list
@@ -113,9 +115,46 @@ def save_region_as_png_by_two_clicks(file_path: str) -> None:
     # mouse.unhook(on_mouse_event_two_clicks)
     if click_counter == 2:
         assert len(coordinates) == 2
-        save_region_as_png(file_path, coordinates)
+        if save_region_as_png(file_path, coordinates):
+            print(f"image saved as {file_path}.")
+        else:
+            print(f"image NOT saved ({file_path}).")
     else:
         print("no image saved.")
+
+
+def remove_row(image_path: str, row_number: int) -> None:
+    image = Image.open(image_path)
+    width, height = image.size
+    if row_number < 0:
+        row_number = height + row_number
+    if row_number < 0 or row_number >= height:
+        print(f"error: invalid row index {row_number}. Image height is {height}.")
+        return
+    else:
+        pixels = list(image.getdata())
+        new_pixels = [pixels[i * width:(i + 1) * width] for i in range(height) if i != row_number]
+        new_data = [pixel for row in new_pixels for pixel in row]
+        new_image = Image.new(image.mode, (width, height - 1))
+        new_image.putdata(new_data)
+        new_image.save(f"{image_path}")
+
+
+def remove_column(image_path, column_number):
+    image = Image.open(image_path)
+    width, height = image.size
+    if column_number < 0:
+        column_number = width + column_number
+    if column_number < 0 or column_number >= width:
+        print(f"error: invalid row index {column_number}. Image width is {width}.")
+        return
+    else:
+        pixels = list(image.getdata())
+        new_pixels = [pixels[i*width:i*width+column_number] + pixels[i*width+column_number+1:(i+1)*width] for i in range(height)]
+        new_data = [pixel for row in new_pixels for pixel in row]
+        new_image = Image.new(image.mode, (width - 1, height))
+        new_image.putdata(new_data)
+        new_image.save(f"{image_path}")
 
 
 def move_delay_click(x: int, y: int, delay: float = 0.5) -> None:
@@ -244,6 +283,170 @@ def click_on_button_AllesProduzieren_if_present() -> None:
     return result
 
 
+def click_on_button_Close_if_present() -> None:
+    png_image_path = "assets/buttonClose.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        print(f'clicked on {png_image_path} at ({x}, {y}).')
+        result = True
+    else:
+        print(f"{png_image_path} not found. no click.")
+        result = False
+    return result
+
+
+def click_on_button_GotoPreviousPane_if_present() -> None:
+    png_image_path = "assets/buttonGotoPreviousPane.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        print(f'clicked on {png_image_path} at ({x}, {y}).')
+        mouse.move(0, 0)
+        result = True
+    else:
+        print(f"{png_image_path} not found. no click.")
+        result = False
+    return result
+
+
+def click_on_button_GotoNextPane_if_present() -> None:
+    png_image_path = "assets/buttonGotoNextPane.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        mouse.move(0, 0)
+        print(f'clicked on {png_image_path} at ({x}, {y}).')
+        result = True
+    else:
+        print(f"{png_image_path} not found. no click.")
+        result = False
+    return result
+
+
+def click_on_button_OpenWarehouse_if_present() -> None:
+    png_image_path = "assets/buttonOpenWarehouse.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        mouse.move(0, 0)
+        print(f'clicked on {png_image_path} at ({x}, {y}).')
+        result = True
+    else:
+        print(f"{png_image_path} not found. no click.")
+        result = False
+    return result
+
+
+def click_on_button_GotoNextIconSet_if_present() -> None:
+    png_image_path = "assets/buttonGotoNextIconSet.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        mouse.move(0, 0)
+        print(f'clicked on {png_image_path} at ({x}, {y}).')
+        result = True
+    else:
+        print(f"{png_image_path} not found. no click.")
+        result = False
+    return result
+
+
+def click_on_button_EnterArtistInWarehouse_if_present() -> None:
+    png_image_path = "assets/buttonEnterArtistInWarehouse.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        mouse.move(0, 0)
+        print(f'clicked on {png_image_path} at ({x}, {y}).')
+        result = True
+    else:
+        print(f"{png_image_path} not found. no click.")
+        result = False
+    return result
+
+
+def click_on_area_UpDownNumberToDelete() -> None:
+    png_image_path = "assets/areaUpDownNumberToDelete.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        print(f'clicked on {png_image_path} at ({x}, {y}).')
+        result = True
+    else:
+        print(f"{png_image_path} not found. no click.")
+        result = False
+    return result
+
+
+def click_on_button_Wegwerfen_if_present() -> None:
+    png_image_path = "assets/buttonWegwerfen.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        mouse.move(0, 0)
+        print(f'clicked on {png_image_path} at ({x}, {y}).')
+        result = True
+    else:
+        print(f"{png_image_path} not found. no click.")
+        result = False
+    return result
+
+
+def click_on_area_FactoryOverview_if_present() -> None:
+    png_image_path = "assets/areaFactoryOverview.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        mouse.move(0, 0)
+        print(f'clicked on {png_image_path} at ({x}, {y}).')
+        result = True
+    else:
+        print(f"{png_image_path} not found. no click.")
+        result = False
+    return result
+
+
+def typewrite(s: str) -> None:
+    pyautogui.typewrite(s, interval=0.3)
+
+
 def main() -> None:
     result_coordinates = learn_coordinates()
     initial_wait_time = 10
@@ -254,9 +457,23 @@ def main() -> None:
     print("finished main")
 
 
+def fetch_goods_from_current_pane():
+    for factory_id in range(1, 7):
+        if click_on_factory(factory_id):
+            time.sleep(2)
+            click_on_button_AllesAbholen_if_present()
+            time.sleep(2)
+            click_on_button_repair_factory(factory_id)
+            time.sleep(2)
+            click_on_button_AllesProduzieren_if_present()
+        else:
+            print(f'factory {factory_id} not found.')
+        time.sleep(2)
+
+
 def main2() -> None:
     # save_region_as_png("/tmp/image.png", [(10, 20), (100, 200)])
-    save_region_as_png_by_two_clicks("/tmp/image.png")
+    save_region_as_png_by_two_clicks("assets/newImage.png")
     print("finished main2")
 
 
@@ -274,20 +491,93 @@ def main3() -> None:
         print(f"{png_image_path} not found")
 
 
+def cut_image(png_image_path: str, top_rows: int, bottom_rows: int, left_columns: int, right_columns: int) -> None:
+    for i in range(top_rows):
+        remove_row(png_image_path, 0)
+    for i in range(bottom_rows):
+        remove_row(png_image_path, -1)
+    for i in range(left_columns):
+        remove_column(png_image_path, 0)
+    for i in range(right_columns):
+        remove_column(png_image_path, -1)
+
+
+def main4() -> None:
+    # click_on_button_Close_if_present()
+    click_on_button_GotoNextPane_if_present()
+    time.sleep(3)
+    click_on_button_GotoPreviousPane_if_present()
+    time.sleep(3)
+    click_on_button_Close_if_present()
+    time.sleep(3)
+
+
+
+def enter_factory_overview() -> None:
+    click_on_area_FactoryOverview_if_present()
+    time.sleep(3)
+
+
+def enter_warehouse_and_delete_farbpaletten() -> None:
+    if click_on_button_OpenWarehouse_if_present():
+        time.sleep(5)
+        click_on_button_GotoNextIconSet_if_present()
+        time.sleep(5)
+        click_on_button_GotoNextIconSet_if_present()
+        time.sleep(5)
+        if click_on_button_EnterArtistInWarehouse_if_present():
+            time.sleep(5)
+            click_on_area_UpDownNumberToDelete()
+            time.sleep(5)
+            typewrite("99999")
+            time.sleep(5)
+            click_on_button_Wegwerfen_if_present()
+            time.sleep(3)
+            click_on_button_Close_if_present()
+            time.sleep(3)
+    else:
+        print("can't find warehouse button. no click.")
+
+
+def goto_first_artist_pane() -> None:
+    click_on_button_GotoNextPane_if_present()
+    time.sleep(1)
+    click_on_button_GotoNextPane_if_present()
+    time.sleep(1)
+    click_on_button_GotoNextPane_if_present()
+    time.sleep(1)
+    click_on_button_GotoNextPane_if_present()
+    time.sleep(1)
+    click_on_button_GotoNextPane_if_present()
+    time.sleep(1)
+    # click_on_button_GotoNextPane_if_present()
+    # time.sleep(1)
+
+
 if __name__ == "__main__":
     # main2()
-    # for factory_id in range(1, 7):
-    #     click_on_repair_factory(factory_id)
-    #     time.sleep(1)
+    # click_on_button_Close_if_present()
+    # sys.exit()
+    # cut_image("assets/dummy.png", 7, 0, 0, 0)
+    n_rounds = 0
     while True:
-        for factory_id in range(1, 7):
-            if click_on_factory(factory_id):
-                time.sleep(2)
-                click_on_button_AllesAbholen_if_present()
-                time.sleep(2)
-                click_on_button_repair_factory(factory_id)
-                time.sleep(2)
-                click_on_button_AllesProduzieren_if_present()
-            else:
-                print(f'factory {factory_id} not found.')
-            time.sleep(2)
+        n_rounds += 1
+        print(f"=== starting round {n_rounds} ===")
+        enter_factory_overview()
+        time.sleep(3)
+        goto_first_artist_pane()
+        time.sleep(3)
+        for _ in range(2):
+            fetch_goods_from_current_pane()
+            time.sleep(3)
+            click_on_button_GotoNextPane_if_present()
+            time.sleep(3)
+            fetch_goods_from_current_pane()
+            time.sleep(3)
+            click_on_button_GotoPreviousPane_if_present()
+            time.sleep(3)
+        click_on_button_Close_if_present()
+        time.sleep(3)
+        enter_warehouse_and_delete_farbpaletten()
+        time.sleep(3)
+        print(f"--- finished round {n_rounds} ---")
