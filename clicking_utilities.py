@@ -447,7 +447,7 @@ def typewrite(s: str) -> None:
     pyautogui.typewrite(s, interval=0.3)
 
 
-def main() -> None:
+def learn_and_click() -> None:
     result_coordinates = learn_coordinates()
     initial_wait_time = 10
     delay_between_clicks = 220
@@ -469,12 +469,6 @@ def fetch_goods_from_current_pane():
         else:
             print(f'factory {factory_id} not found.')
         time.sleep(2)
-
-
-def main2() -> None:
-    # save_region_as_png("/tmp/image.png", [(10, 20), (100, 200)])
-    save_region_as_png_by_two_clicks("assets/newImage.png")
-    print("finished main2")
 
 
 def main3() -> None:
@@ -539,7 +533,7 @@ def enter_warehouse_and_delete_farbpaletten() -> None:
         print("can't find warehouse button. no click.")
 
 
-def goto_first_artist_pane() -> None:
+def navigate_to_first_artist_pane() -> None:
     click_on_button_GotoNextPane_if_present()
     time.sleep(1)
     click_on_button_GotoNextPane_if_present()
@@ -554,18 +548,14 @@ def goto_first_artist_pane() -> None:
     # time.sleep(1)
 
 
-if __name__ == "__main__":
-    # main2()
-    # click_on_button_Close_if_present()
-    # sys.exit()
-    # cut_image("assets/dummy.png", 7, 0, 0, 0)
+def fetch_color_palettes():
     n_rounds = 0
     while True:
         n_rounds += 1
         print(f"=== starting round {n_rounds} ===")
         enter_factory_overview()
         time.sleep(3)
-        goto_first_artist_pane()
+        navigate_to_first_artist_pane()
         time.sleep(3)
         for _ in range(2):
             fetch_goods_from_current_pane()
@@ -581,3 +571,11 @@ if __name__ == "__main__":
         enter_warehouse_and_delete_farbpaletten()
         time.sleep(3)
         print(f"--- finished round {n_rounds} ---")
+
+
+if __name__ == "__main__":
+    fetch_color_palettes()
+    # learn_and_click()
+    # save_region_as_png_by_two_clicks("assets/newImage.png")()
+    # click_on_button_Close_if_present()
+    # cut_image("assets/dummy.png", 7, 0, 0, 0)
