@@ -533,19 +533,12 @@ def enter_warehouse_and_delete_farbpaletten() -> None:
         print("can't find warehouse button. no click.")
 
 
-def navigate_to_first_artist_pane() -> None:
-    click_on_button_GotoNextPane_if_present()
-    time.sleep(1)
-    click_on_button_GotoNextPane_if_present()
-    time.sleep(1)
-    click_on_button_GotoNextPane_if_present()
-    time.sleep(1)
-    click_on_button_GotoNextPane_if_present()
-    time.sleep(1)
-    click_on_button_GotoNextPane_if_present()
-    time.sleep(1)
-    # click_on_button_GotoNextPane_if_present()
-    # time.sleep(1)
+def navigate_to_pane(pane_number: int) -> None:
+    while pane_number > 1:
+        click_on_button_GotoNextPane_if_present()
+        pane_number -= 1
+        if pane_number > 1:
+            time.sleep(1)
 
 
 def fetch_color_palettes():
@@ -555,7 +548,7 @@ def fetch_color_palettes():
         print(f"=== starting round {n_rounds} ===")
         enter_factory_overview()
         time.sleep(3)
-        navigate_to_first_artist_pane()
+        navigate_to_pane(5)  # first artist pane
         time.sleep(3)
         for _ in range(2):
             fetch_goods_from_current_pane()
@@ -563,6 +556,12 @@ def fetch_color_palettes():
             click_on_button_GotoNextPane_if_present()
             time.sleep(3)
             fetch_goods_from_current_pane()
+            time.sleep(3)
+            click_on_button_GotoNextPane_if_present()
+            time.sleep(3)
+            fetch_goods_from_current_pane()
+            time.sleep(3)
+            click_on_button_GotoPreviousPane_if_present()
             time.sleep(3)
             click_on_button_GotoPreviousPane_if_present()
             time.sleep(3)
