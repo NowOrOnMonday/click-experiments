@@ -425,6 +425,42 @@ def click_on_button_Wegwerfen_if_present() -> None:
     return result
 
 
+def click_on_button_JumpToMarketplace_if_present() -> None:
+    png_image_path = "assets/buttonJumpToMarketplace.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        mouse.move(0, 0)
+        print(f'clicked on {png_image_path} at ({x}, {y}).')
+        result = True
+    else:
+        print(f"{png_image_path} not found. no click.")
+        result = False
+    return result
+
+
+def click_on_button_leaveDiorama_if_present() -> None:
+    png_image_path = "assets/buttonLeaveDiorama.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        mouse.move(0, 0)
+        print(f'clicked on {png_image_path} at ({x}, {y}).')
+        result = True
+    else:
+        print(f"{png_image_path} not found. no click.")
+        result = False
+    return result
+
+
 def click_on_area_FactoryOverview_if_present() -> None:
     png_image_path = "assets/areaFactoryOverview.png"
     result = get_center_coordinate_of_image(png_image_path)
@@ -566,6 +602,10 @@ def fetch_color_palettes():
             click_on_button_GotoPreviousPane_if_present()
             time.sleep(3)
         click_on_button_Close_if_present()
+        click_on_button_LeaveDiorama_if_present()
+        click_on_button_JumpToMarketplace_if_present
+
+
         time.sleep(3)
         enter_warehouse_and_delete_farbpaletten()
         time.sleep(3)
@@ -577,4 +617,4 @@ if __name__ == "__main__":
     # learn_and_click()
     # save_region_as_png_by_two_clicks("assets/newImage.png")()
     # click_on_button_Close_if_present()
-    # cut_image("assets/dummy.png", 7, 0, 0, 0)
+    # cut_image("assets/buttonLeaveDiorama.png", 13, 12, 16, 2)
