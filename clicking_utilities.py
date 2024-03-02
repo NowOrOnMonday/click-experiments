@@ -602,10 +602,10 @@ def fetch_color_palettes():
             click_on_button_GotoPreviousPane_if_present()
             time.sleep(3)
         click_on_button_Close_if_present()
+        time.sleep(1)
         click_on_button_leaveDiorama_if_present()
+        time.sleep(1)
         click_on_button_JumpToMarketplace_if_present
-
-
         time.sleep(3)
         enter_warehouse_and_delete_farbpaletten()
         time.sleep(3)
