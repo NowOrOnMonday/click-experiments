@@ -602,7 +602,7 @@ def fetch_color_palettes():
             click_on_button_GotoPreviousPane_if_present()
             time.sleep(3)
         click_on_button_Close_if_present()
-        click_on_button_LeaveDiorama_if_present()
+        click_on_button_leaveDiorama_if_present()
         click_on_button_JumpToMarketplace_if_present
 
 
