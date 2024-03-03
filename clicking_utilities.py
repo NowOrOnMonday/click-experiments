@@ -601,7 +601,7 @@ def fetch_color_palettes():
         print("area Factory not found. no click.")
 
 
-if __name__ == "__main__":
+def fetch_automation_main() -> None:
     while True:
         if click_on_button_NewStart_if_present():
             print("button NewStart found.")
@@ -619,6 +619,10 @@ if __name__ == "__main__":
         else:
             print("found nothing of all. waiting 60 seconds ...")
             time.sleep(60)
+
+
+if __name__ == "__main__":
+    fetch_automation_main()
     # learn_and_click()
     # save_region_as_png_by_two_clicks("assets/newImage.png")
     # click_on_button_Close_if_present()
