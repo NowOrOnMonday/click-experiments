@@ -612,12 +612,15 @@ def fetch_automation_main(user: str) -> None:
     while True:
         if click_on_button_NewStart_if_present():
             print("button NewStart found.")
+            print("waiting 20 seconds ...")
             time.sleep(20)
         elif click_on_button_ServerFourJerenity_if_present():
             print("button ServerFourJerenity found.")
+            print("waiting 120 seconds ...")
             time.sleep(120)
         elif click_on_button_ServerFourNissinissi_if_present():
             print("button ServerFourNissinissi found.")
+            print("waiting 120 seconds ...")
             time.sleep(120)
         elif is_present_area_DailyOffer():
             print("area DailyOffer found.")
@@ -645,7 +648,9 @@ def fetch_automation_main(user: str) -> None:
                 sys.exit()
             fetch_color_palettes(number_of_first_pane, pane_fetch_plan)
         elif click_on_button_Close_if_present():
-            pass
+            print("button Close found.")
+            print("waiting 2 seconds ...")
+            time.sleep(2)
         else:
             print("found nothing of all. waiting 60 seconds ...")
             time.sleep(60)
