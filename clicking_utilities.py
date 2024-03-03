@@ -644,6 +644,8 @@ def fetch_automation_main(user: str) -> None:
                 print(f"fatal error: unknown user {user}.")
                 sys.exit()
             fetch_color_palettes(number_of_first_pane, pane_fetch_plan)
+        elif click_on_button_Close_if_present():
+            pass
         else:
             print("found nothing of all. waiting 60 seconds ...")
             time.sleep(60)
