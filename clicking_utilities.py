@@ -481,6 +481,24 @@ def click_on_button_ServerFourJerenity_if_present() -> None:
     return result
 
 
+def click_on_button_ServerFourNissinissi_if_present() -> None:
+    png_image_path = "assets/buttonServerFourNissinissi.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        mouse.move(0, 0)
+        print(f'clicked on {png_image_path} at ({x}, {y}).')
+        result = True
+    else:
+        print(f"{png_image_path} not found. no click.")
+        result = False
+    return result
+
+
 def is_present_area_DailyOffer() -> None:
     png_image_path = "assets/areaDailyOffer.png"
     result = get_center_coordinate_of_image(png_image_path)
@@ -510,22 +528,25 @@ def learn_and_click() -> None:
     print("finished main")
 
 
-def fetch_goods_from_current_pane() -> None:
+def fetch_goods_from_current_pane(current_pane_fetch_plan) -> None:
     for factory_id in range(1, 7):
-        if click_on_factory(factory_id):
-            time.sleep(2)
-            while True:
-                if click_on_button_AllesAbholen_if_present():
-                    time.sleep(2)
-                    click_on_button_repair_factory(factory_id)
-                    time.sleep(1)
-                    click_on_button_AllesProduzieren_if_present()
-                    break
-                else:
-                    print(f"factory {factory_id} not ready for fetching goods. waiting 3 seconds.")
-                    time.sleep(3)
+        if current_pane_fetch_plan[factory_id-1]:
+            if click_on_factory(factory_id):
+                time.sleep(2)
+                while True:
+                    if click_on_button_AllesAbholen_if_present():
+                        time.sleep(2)
+                        click_on_button_repair_factory(factory_id)
+                        time.sleep(1)
+                        click_on_button_AllesProduzieren_if_present()
+                        break
+                    else:
+                        print(f"factory {factory_id} not ready for fetching goods. waiting 3 seconds.")
+                        time.sleep(3)
+            else:
+                print(f'factory {factory_id} not found.')
         else:
-            print(f'factory {factory_id} not found.')
+            print(f'factory {factory_id} ignored.')
         time.sleep(2)
 
 
@@ -558,37 +579,23 @@ def navigate_to_pane(pane_number: int) -> None:
             time.sleep(1)
 
 
-def fetch_color_palettes():
+def fetch_color_palettes(number_of_first_pane: int, pane_fetch_plan: list):
     if click_on_area_FactoryOverview_if_present():
         print(f"=== entering factory overview ===")
         time.sleep(3)
-        navigate_to_pane(5)  # first artist pane
+        navigate_to_pane(number_of_first_pane)  # first artist pane
         time.sleep(3)
         for _ in range(2):
-            fetch_goods_from_current_pane()
+            for current_pane_fetch_plan in pane_fetch_plan[:-1]:
+                fetch_goods_from_current_pane(current_pane_fetch_plan)
+                time.sleep(3)
+                click_on_button_GotoNextPane_if_present()
+                time.sleep(3)
+            fetch_goods_from_current_pane(pane_fetch_plan[-1])   # last pane
             time.sleep(3)
-            click_on_button_GotoNextPane_if_present()
-            time.sleep(3)
-
-            fetch_goods_from_current_pane()
-            time.sleep(3)
-            click_on_button_GotoNextPane_if_present()
-            time.sleep(3)
-
-            fetch_goods_from_current_pane()
-            time.sleep(3)
-            click_on_button_GotoNextPane_if_present()
-            time.sleep(3)
-
-            fetch_goods_from_current_pane()
-            time.sleep(3)
-
-            click_on_button_GotoPreviousPane_if_present()
-            time.sleep(3)
-            click_on_button_GotoPreviousPane_if_present()
-            time.sleep(3)
-            click_on_button_GotoPreviousPane_if_present()
-            time.sleep(3)
+            for _ in range(len(pane_fetch_plan)-1):   # navigate back to first pane
+                click_on_button_GotoPreviousPane_if_present()
+                time.sleep(3)
         click_on_button_Close_if_present()
         time.sleep(1)
         click_on_button_leaveDiorama_if_present()
@@ -601,7 +608,7 @@ def fetch_color_palettes():
         print("area Factory not found. no click.")
 
 
-def fetch_automation_main() -> None:
+def fetch_automation_main(user: str) -> None:
     while True:
         if click_on_button_NewStart_if_present():
             print("button NewStart found.")
@@ -609,20 +616,42 @@ def fetch_automation_main() -> None:
         elif click_on_button_ServerFourJerenity_if_present():
             print("button ServerFourJerenity found.")
             time.sleep(120)
+        elif click_on_button_ServerFourNissinissi_if_present():
+            print("button ServerFourNissinissi found.")
+            time.sleep(120)
         elif is_present_area_DailyOffer():
             print("area DailyOffer found.")
             time.sleep(1)
             click_on_button_Close_if_present()
         elif click_on_button_JumpToMarketplace_if_present():
             time.sleep(3)
-            fetch_color_palettes()
+            if user == "Jerenity":
+                number_of_first_pane = 5
+                pane_fetch_plan = [
+                    [True, True, True, True, True, True],
+                    [True, True, True, True, True, True],
+                    [True, True, True, True, True, True],
+                    [True, True, True, True, True, True]
+                ]
+            elif user == "Nissinissi":
+                number_of_first_pane = 5
+                pane_fetch_plan = [
+                    [False, False, True, True, True, True],
+                    [True, True, True, True, True, True],
+                    [True, True, True, False, False, False]
+                ]
+            else:
+                print(f"fatal error: unknown user {user}.")
+                sys.exit()
+            fetch_color_palettes(number_of_first_pane, pane_fetch_plan)
         else:
             print("found nothing of all. waiting 60 seconds ...")
             time.sleep(60)
 
 
 if __name__ == "__main__":
-    fetch_automation_main()
+    fetch_automation_main(user="Jerenity")
+    # fetch_automation_main(user="Nissinissi")
     # learn_and_click()
     # save_region_as_png_by_two_clicks("assets/newImage.png")
     # click_on_button_Close_if_present()
