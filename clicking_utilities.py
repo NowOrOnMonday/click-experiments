@@ -8,7 +8,7 @@ import time
 import cv2 as cv
 import numpy as np
 from pyautogui import ImageNotFoundException
-from PIL import Image
+
 
 
 run: bool
@@ -121,40 +121,6 @@ def save_region_as_png_by_two_clicks(file_path: str) -> None:
             print(f"image NOT saved ({file_path}).")
     else:
         print("no image saved.")
-
-
-def remove_row(image_path: str, row_number: int) -> None:
-    image = Image.open(image_path)
-    width, height = image.size
-    if row_number < 0:
-        row_number = height + row_number
-    if row_number < 0 or row_number >= height:
-        print(f"error: invalid row index {row_number}. Image height is {height}.")
-        return
-    else:
-        pixels = list(image.getdata())
-        new_pixels = [pixels[i * width:(i + 1) * width] for i in range(height) if i != row_number]
-        new_data = [pixel for row in new_pixels for pixel in row]
-        new_image = Image.new(image.mode, (width, height - 1))
-        new_image.putdata(new_data)
-        new_image.save(f"{image_path}")
-
-
-def remove_column(image_path, column_number):
-    image = Image.open(image_path)
-    width, height = image.size
-    if column_number < 0:
-        column_number = width + column_number
-    if column_number < 0 or column_number >= width:
-        print(f"error: invalid row index {column_number}. Image width is {width}.")
-        return
-    else:
-        pixels = list(image.getdata())
-        new_pixels = [pixels[i*width:i*width+column_number] + pixels[i*width+column_number+1:(i+1)*width] for i in range(height)]
-        new_data = [pixel for row in new_pixels for pixel in row]
-        new_image = Image.new(image.mode, (width - 1, height))
-        new_image.putdata(new_data)
-        new_image.save(f"{image_path}")
 
 
 def move_delay_click(x: int, y: int, delay: float = 0.5) -> None:
@@ -479,6 +445,57 @@ def click_on_area_FactoryOverview_if_present() -> None:
     return result
 
 
+def click_on_button_NewStart_if_present() -> None:
+    png_image_path = "assets/buttonNewStart.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        mouse.move(0, 0)
+        print(f'clicked on {png_image_path} at ({x}, {y}).')
+        result = True
+    else:
+        print(f"{png_image_path} not found. no click.")
+        result = False
+    return result
+
+
+def click_on_button_ServerFourJerenity_if_present() -> None:
+    png_image_path = "assets/buttonServerFourJerenity.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        mouse.move(0, 0)
+        print(f'clicked on {png_image_path} at ({x}, {y}).')
+        result = True
+    else:
+        print(f"{png_image_path} not found. no click.")
+        result = False
+    return result
+
+
+def is_present_area_DailyOffer() -> None:
+    png_image_path = "assets/areaDailyOffer.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        # mouse.move(x, y)
+        # time.sleep(0.5)
+        result = True
+    else:
+        print(f"{png_image_path} not found.")
+        result = False
+    return result
+
+
 def typewrite(s: str) -> None:
     pyautogui.typewrite(s, interval=0.3)
 
@@ -493,62 +510,26 @@ def learn_and_click() -> None:
     print("finished main")
 
 
-def fetch_goods_from_current_pane():
+def fetch_goods_from_current_pane() -> None:
     for factory_id in range(1, 7):
         if click_on_factory(factory_id):
             time.sleep(2)
-            click_on_button_AllesAbholen_if_present()
-            time.sleep(2)
-            click_on_button_repair_factory(factory_id)
-            time.sleep(2)
-            click_on_button_AllesProduzieren_if_present()
+            while True:
+                if click_on_button_AllesAbholen_if_present():
+                    time.sleep(2)
+                    click_on_button_repair_factory(factory_id)
+                    time.sleep(1)
+                    click_on_button_AllesProduzieren_if_present()
+                    break
+                else:
+                    print(f"factory {factory_id} not ready for fetching goods. waiting 3 seconds.")
+                    time.sleep(3)
         else:
             print(f'factory {factory_id} not found.')
         time.sleep(2)
 
 
-def main3() -> None:
-    png_image_path = "assets/buttonAlleBeenden.png"
-    png_image_path = "assets/buttonAllesAbholen.png"
-    result = get_center_coordinate_of_image(png_image_path)
-    if result:
-        x = result[0]
-        y = result[1]
-        # result = get_center_coordinate_of_image()
-        print(f'center of {png_image_path} at ({x}, {y}).')
-        mouse.move(x, y)
-    else:
-        print(f"{png_image_path} not found")
-
-
-def cut_image(png_image_path: str, top_rows: int, bottom_rows: int, left_columns: int, right_columns: int) -> None:
-    for i in range(top_rows):
-        remove_row(png_image_path, 0)
-    for i in range(bottom_rows):
-        remove_row(png_image_path, -1)
-    for i in range(left_columns):
-        remove_column(png_image_path, 0)
-    for i in range(right_columns):
-        remove_column(png_image_path, -1)
-
-
-def main4() -> None:
-    # click_on_button_Close_if_present()
-    click_on_button_GotoNextPane_if_present()
-    time.sleep(3)
-    click_on_button_GotoPreviousPane_if_present()
-    time.sleep(3)
-    click_on_button_Close_if_present()
-    time.sleep(3)
-
-
-
-def enter_factory_overview() -> None:
-    click_on_area_FactoryOverview_if_present()
-    time.sleep(3)
-
-
-def enter_warehouse_and_delete_farbpaletten() -> None:
+def enter_warehouse_and_delete_colorpalettes() -> None:
     if click_on_button_OpenWarehouse_if_present():
         time.sleep(5)
         click_on_button_GotoNextIconSet_if_present()
@@ -578,11 +559,8 @@ def navigate_to_pane(pane_number: int) -> None:
 
 
 def fetch_color_palettes():
-    n_rounds = 0
-    while True:
-        n_rounds += 1
-        print(f"=== starting round {n_rounds} ===")
-        enter_factory_overview()
+    if click_on_area_FactoryOverview_if_present():
+        print(f"=== entering factory overview ===")
         time.sleep(3)
         navigate_to_pane(5)  # first artist pane
         time.sleep(3)
@@ -591,11 +569,21 @@ def fetch_color_palettes():
             time.sleep(3)
             click_on_button_GotoNextPane_if_present()
             time.sleep(3)
+
             fetch_goods_from_current_pane()
             time.sleep(3)
             click_on_button_GotoNextPane_if_present()
             time.sleep(3)
+
             fetch_goods_from_current_pane()
+            time.sleep(3)
+            click_on_button_GotoNextPane_if_present()
+            time.sleep(3)
+
+            fetch_goods_from_current_pane()
+            time.sleep(3)
+
+            click_on_button_GotoPreviousPane_if_present()
             time.sleep(3)
             click_on_button_GotoPreviousPane_if_present()
             time.sleep(3)
@@ -607,14 +595,31 @@ def fetch_color_palettes():
         time.sleep(1)
         click_on_button_JumpToMarketplace_if_present
         time.sleep(3)
-        enter_warehouse_and_delete_farbpaletten()
+        enter_warehouse_and_delete_colorpalettes()
         time.sleep(3)
-        print(f"--- finished round {n_rounds} ---")
+    else:
+        print("area Factory not found. no click.")
 
 
 if __name__ == "__main__":
-    fetch_color_palettes()
+    while True:
+        if click_on_button_NewStart_if_present():
+            print("button NewStart found.")
+            time.sleep(20)
+        elif click_on_button_ServerFourJerenity_if_present():
+            print("button ServerFourJerenity found.")
+            time.sleep(120)
+        elif is_present_area_DailyOffer():
+            print("area DailyOffer found.")
+            time.sleep(1)
+            click_on_button_Close_if_present()
+        elif click_on_button_JumpToMarketplace_if_present():
+            time.sleep(3)
+            fetch_color_palettes()
+        else:
+            print("found nothing of all. waiting 60 seconds ...")
+            time.sleep(60)
     # learn_and_click()
-    # save_region_as_png_by_two_clicks("assets/newImage.png")()
+    # save_region_as_png_by_two_clicks("assets/newImage.png")
     # click_on_button_Close_if_present()
-    # cut_image("assets/buttonLeaveDiorama.png", 13, 12, 16, 2)
+    # cut_image("assets/areaTäglichesAngebot.png", 2, 4, 3, 1)
