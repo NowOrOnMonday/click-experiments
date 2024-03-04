@@ -532,24 +532,20 @@ def fetch_goods_from_current_pane(current_pane_fetch_plan) -> None:
     for factory_id in range(1, 7):
         if current_pane_fetch_plan[factory_id-1]:
             if click_on_factory(factory_id):
-                time.sleep(2)
+                time.sleep(1)
+                click_on_button_repair_factory(factory_id)
+                time.sleep(1)
                 while True:
                     if click_on_button_AllesAbholen_if_present():
-                        time.sleep(2)
-                        click_on_button_AllesProduzieren_if_present()
-                        time.sleep(2)
+                        time.sleep(1)
                         click_on_button_repair_factory(factory_id)
+                        time.sleep(1)
+                    elif click_on_button_AllesProduzieren_if_present():
                         time.sleep(1)
                         break
                     else:
-                        click_on_button_repair_factory(factory_id)
-                        time.sleep(1)
-                        if click_on_button_AllesProduzieren_if_present():
-                            time.sleep(2)
-                            break
-                        else:
-                            print(f"factory {factory_id} not ready for fetching goods. waiting 2 seconds.")
-                            time.sleep(2)
+                        print(f"factory {factory_id} not ready for fetching goods. waiting 3 seconds.")
+                        time.sleep(3)
             else:
                 print(f'factory {factory_id} not found.')
         else:
@@ -588,7 +584,7 @@ def navigate_to_pane(pane_number: int) -> None:
 
 def fetch_color_palettes(number_of_first_pane: int, pane_fetch_plan: list):
     if click_on_area_FactoryOverview_if_present():
-        print(f"=== entering factory overview ===")
+        print(f"=== entering marketplace factory overview ===")
         time.sleep(3)
         navigate_to_pane(number_of_first_pane)  # first artist pane
         time.sleep(3)
@@ -664,8 +660,8 @@ def fetch_automation_main(user: str) -> None:
 
 
 if __name__ == "__main__":
-    # fetch_automation_main(user="Jerenity")
-    fetch_automation_main(user="Nissinissi")
+    fetch_automation_main(user="Jerenity")
+    # fetch_automation_main(user="Nissinissi")
     # learn_and_click()
     # save_region_as_png_by_two_clicks("assets/newImage.png")
     # click_on_button_Close_if_present()
