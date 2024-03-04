@@ -642,9 +642,9 @@ def fetch_automation_main(user: str) -> None:
             elif user == "Nissinissi":
                 number_of_first_pane = 5
                 pane_fetch_plan = [
-                    [False, False, True, True, True, True],
                     [True, True, True, True, True, True],
-                    [True, True, True, False, False, False]
+                    [True, True, True, True, True, True],
+                    [True, True, True, True, True, False]
                 ]
             else:
                 print(f"fatal error: unknown user {user}.")
@@ -660,8 +660,8 @@ def fetch_automation_main(user: str) -> None:
 
 
 if __name__ == "__main__":
-    fetch_automation_main(user="Jerenity")
-    # fetch_automation_main(user="Nissinissi")
+    # fetch_automation_main(user="Jerenity")
+    fetch_automation_main(user="Nissinissi")
     # learn_and_click()
     # save_region_as_png_by_two_clicks("assets/newImage.png")
     # click_on_button_Close_if_present()
