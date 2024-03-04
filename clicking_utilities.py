@@ -536,9 +536,15 @@ def fetch_goods_from_current_pane(current_pane_fetch_plan) -> None:
                 while True:
                     if click_on_button_AllesAbholen_if_present():
                         time.sleep(2)
+                        click_on_button_AllesProduzieren_if_present()
+                        time.sleep(2)
                         click_on_button_repair_factory(factory_id)
                         time.sleep(1)
-                        click_on_button_AllesProduzieren_if_present()
+                        break
+                    elif click_on_button_AllesProduzieren_if_present():
+                        time.sleep(2)
+                        click_on_button_repair_factory(factory_id)
+                        time.sleep(1)
                         break
                     else:
                         print(f"factory {factory_id} not ready for fetching goods. waiting 3 seconds.")
@@ -657,8 +663,8 @@ def fetch_automation_main(user: str) -> None:
 
 
 if __name__ == "__main__":
-    fetch_automation_main(user="Jerenity")
-    # fetch_automation_main(user="Nissinissi")
+    # fetch_automation_main(user="Jerenity")
+    fetch_automation_main(user="Nissinissi")
     # learn_and_click()
     # save_region_as_png_by_two_clicks("assets/newImage.png")
     # click_on_button_Close_if_present()
