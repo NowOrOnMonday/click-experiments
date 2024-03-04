@@ -541,14 +541,15 @@ def fetch_goods_from_current_pane(current_pane_fetch_plan) -> None:
                         click_on_button_repair_factory(factory_id)
                         time.sleep(1)
                         break
-                    elif click_on_button_AllesProduzieren_if_present():
-                        time.sleep(2)
+                    else:
                         click_on_button_repair_factory(factory_id)
                         time.sleep(1)
-                        break
-                    else:
-                        print(f"factory {factory_id} not ready for fetching goods. waiting 3 seconds.")
-                        time.sleep(3)
+                        if click_on_button_AllesProduzieren_if_present():
+                            time.sleep(2)
+                            break
+                        else:
+                            print(f"factory {factory_id} not ready for fetching goods. waiting 2 seconds.")
+                            time.sleep(2)
             else:
                 print(f'factory {factory_id} not found.')
         else:
