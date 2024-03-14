@@ -528,26 +528,30 @@ def learn_and_click() -> None:
     print("finished main")
 
 
-def fetch_goods_from_current_pane(current_pane_fetch_plan) -> None:
-    for factory_id in range(1, 7):
-        if current_pane_fetch_plan[factory_id-1]:
-            if click_on_factory(factory_id):
+def fetch_goods_from_factory(factory_id: int) -> None:
+    if click_on_factory(factory_id):
+        time.sleep(1)
+        click_on_button_repair_factory(factory_id)
+        time.sleep(1)
+        while True:
+            if click_on_button_AllesAbholen_if_present():
                 time.sleep(1)
                 click_on_button_repair_factory(factory_id)
                 time.sleep(1)
-                while True:
-                    if click_on_button_AllesAbholen_if_present():
-                        time.sleep(1)
-                        click_on_button_repair_factory(factory_id)
-                        time.sleep(1)
-                    elif click_on_button_AllesProduzieren_if_present():
-                        time.sleep(1)
-                        break
-                    else:
-                        print(f"factory {factory_id} not ready for fetching goods. waiting 3 seconds.")
-                        time.sleep(3)
+            elif click_on_button_AllesProduzieren_if_present():
+                time.sleep(1)
+                break
             else:
-                print(f'factory {factory_id} not found.')
+                print(f"factory {factory_id} not ready for fetching goods. waiting 3 seconds.")
+                time.sleep(3)
+    else:
+        print(f'factory {factory_id} not found.')
+
+
+def fetch_goods_from_current_pane(current_pane_fetch_plan) -> None:
+    for factory_id in range(1, 7):
+        if current_pane_fetch_plan[factory_id-1]:
+            fetch_goods_from_factory(factory_id)
         else:
             print(f'factory {factory_id} ignored.')
         time.sleep(2)
@@ -661,8 +665,8 @@ def fetch_automation_main(user: str) -> None:
 
 if __name__ == "__main__":
     # fetch_automation_main(user="Jerenity")
-    fetch_automation_main(user="Nissinissi")
-    # learn_and_click()
-    # save_region_as_png_by_two_clicks("assets/newImage.png")
+    # fetch_automation_main(user="Nissinissi")
+    learn_and_click()
+    # save_region_as_png_by_two_clicks("assets/toInspectXXX.png")
     # click_on_button_Close_if_present()
     # cut_image("assets/areaTäglichesAngebot.png", 2, 4, 3, 1)
