@@ -569,62 +569,59 @@ def fetch_goods_from_factory(factory_id: int, maximal_time: int) -> None:
     end_time: int
     elapsed_time: int
     if click_on_factory(factory_id):
-        time.sleep(1)
-        click_on_button_repair_factory(factory_id)
-        time.sleep(1)
         if maximal_time == 0:   # wait until ready to fetch goods
             while True:
-                print(f"trying to fetch goods from factory {factory_id}.  {maximal_time = }")
-                if click_on_button_Abholen_if_present():
-                    click_on_button_repair_factory(factory_id)
-                    print(f"fetched goods from production slot of factory {factory_id}.")
-                    print(f"repaired factory {factory_id}.")
+                print(f"working on factory {factory_id}.  {maximal_time = }")
+                click_on_button_repair_factory(factory_id)
+                if click_on_button_AllesProduzieren_if_present():
+                    print(f"started production on factory {factory_id}.")
+                    time.sleep(1)
+                    break
+                if click_on_button_Produzieren_if_present():
+                    print(f"started production on slot of factory {factory_id}.")
                     time.sleep(1)
                 if click_on_button_AllesAbholen_if_present():
                     click_on_button_repair_factory(factory_id)
                     print(f"fetched goods from factory {factory_id}.")
                     print(f"repaired factory {factory_id}.")
                     time.sleep(1)
-                if click_on_button_Produzieren_if_present():
-                    print(f"started production on slot of factory {factory_id}.")
+                if click_on_button_Abholen_if_present():
+                    click_on_button_repair_factory(factory_id)
+                    print(f"fetched goods from production slot of factory {factory_id}.")
+                    print(f"repaired factory {factory_id}.")
                     time.sleep(1)
-                    break
-                if click_on_button_AllesProduzieren_if_present():
-                    print(f"started production on factory {factory_id}.")
-                    time.sleep(1)
-                    break
-                print(f"factory {factory_id} not finished. waiting 3 seconds.  {maximal_time = }")
-                time.sleep(3)
+                print(f"factory {factory_id} not finished. waiting 2 seconds.  {maximal_time = }")
+                time.sleep(2)
         else:   # wait at most try_time seconds
             start_time = datetime.datetime.now()
             while True:
-                print(f"trying to fetch goods from factory {factory_id}.  {maximal_time = }")
-                if click_on_button_Abholen_if_present():
-                    click_on_button_repair_factory(factory_id)
-                    print(f"fetched goods from production slot of factory {factory_id}.")
-                    print(f"repaired factory {factory_id}.")
+                print(f"working on factory {factory_id}.  {maximal_time = }")
+                click_on_button_repair_factory(factory_id)
+                if click_on_button_AllesProduzieren_if_present():
+                    print(f"started production on factory {factory_id}.")
+                    time.sleep(1)
+                    break
+                if click_on_button_Produzieren_if_present():
+                    print(f"started production on slot of factory {factory_id}.")
                     time.sleep(1)
                 if click_on_button_AllesAbholen_if_present():
                     click_on_button_repair_factory(factory_id)
                     print(f"fetched goods from factory {factory_id}.")
                     print(f"repaired factory {factory_id}.")
                     time.sleep(1)
-                if click_on_button_Produzieren_if_present():
-                    print(f"started production on slot of factory {factory_id}.")
+                if click_on_button_Abholen_if_present():
+                    click_on_button_repair_factory(factory_id)
+                    print(f"fetched goods from production slot of factory {factory_id}.")
+                    print(f"repaired factory {factory_id}.")
                     time.sleep(1)
-                    break
-                if click_on_button_AllesProduzieren_if_present():
-                    print(f"started production on factory {factory_id}.")
-                    time.sleep(1)
-                    break
                 end_time = datetime.datetime.now()
                 elapsed_time = (end_time - start_time).seconds
                 print(f"factory {factory_id} not finished.  {elapsed_time = }  {maximal_time = }")
                 if elapsed_time > maximal_time:
                     print(f"reached maximal fetch time. factory {factory_id} stopped.")
                     break
-                print(f"waiting 3 seconds.")
-                time.sleep(3)
+                print(f"waiting 2 seconds.")
+                time.sleep(2)
     else:
         print(f'factory {factory_id} not found =============')
 
@@ -667,7 +664,7 @@ def navigate_to_pane(pane_number: int) -> None:
             time.sleep(1)
 
 
-def fetch_color_palettes(number_of_first_pane: int, pane_fetch_plan: list):
+def fetch_color_palettes(number_of_first_pane: int, pane_fetch_plan: list) -> None:
     if click_on_area_FactoryOverview_if_present():
         print(f"=== entering marketplace factory overview ===")
         time.sleep(3)
@@ -719,10 +716,12 @@ def fetch_automation_main(user: str) -> None:
             if user == "Jerenity":
                 number_of_first_pane = 1 # 14
                 pane_fetch_plan = [
-                    [-1, -1, 10, 10, 10, 10],
-                    [10, 10, 10, 10, 10, 10],
-                    [10, 10, 10, 10, 10, 10],
-                    [10, 10, 10, 10, 10, 10]
+                    [-1, -1, 20, 20, 20, 20],
+                    [20, 20, 20, 20, 20, 20],
+                    [20, 20, 20, 20, 20, 20],
+                    [20, 20, 20, 20, 20, 20],
+                    [20, 20, 20, 20, -1, -1],
+                    [-1, 20, 20, 20, 20, 20]
                 ]
             elif user == "Nissinissi":
                 number_of_first_pane = 5
