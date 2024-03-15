@@ -11,7 +11,7 @@ import cv2 as cv
 import numpy as np
 from pyautogui import ImageNotFoundException
 
-
+from image_utils import cut_image
 
 run: bool
 coordinates: list
@@ -234,8 +234,42 @@ def click_on_button_AllesAbholen_if_present() -> bool:
     return result
 
 
+def click_on_button_Abholen_if_present() -> bool:
+    png_image_path = "assets/buttonAbholen.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        print(f'clicked on {png_image_path} at ({x}, {y}).')
+        result = True
+    else:
+        print(f"{png_image_path} not found. no click.")
+        result = False
+    return result
+
+
 def click_on_button_AllesProduzieren_if_present() -> None:
     png_image_path = "assets/buttonAllesProduzieren.png"
+    result = get_center_coordinate_of_image(png_image_path)
+    if result:
+        x = result[0]
+        y = result[1]
+        mouse.move(x, y)
+        time.sleep(0.5)
+        pyautogui.click(x, y)
+        print(f'clicked on {png_image_path} at ({x}, {y}).')
+        result = True
+    else:
+        print(f"{png_image_path} not found. no click.")
+        result = False
+    return result
+
+
+def click_on_button_Produzieren_if_present() -> None:
+    png_image_path = "assets/buttonProduzieren.png"
     result = get_center_coordinate_of_image(png_image_path)
     if result:
         x = result[0]
@@ -541,11 +575,20 @@ def fetch_goods_from_factory(factory_id: int, maximal_time: int) -> None:
         if maximal_time == 0:   # wait until ready to fetch goods
             while True:
                 print(f"trying to fetch goods from factory {factory_id}.  {maximal_time = }")
+                if click_on_button_Abholen_if_present():
+                    click_on_button_repair_factory(factory_id)
+                    print(f"fetched goods from production slot of factory {factory_id}.")
+                    print(f"repaired factory {factory_id}.")
+                    time.sleep(1)
                 if click_on_button_AllesAbholen_if_present():
                     click_on_button_repair_factory(factory_id)
                     print(f"fetched goods from factory {factory_id}.")
                     print(f"repaired factory {factory_id}.")
                     time.sleep(1)
+                if click_on_button_Produzieren_if_present():
+                    print(f"started production on slot of factory {factory_id}.")
+                    time.sleep(1)
+                    break
                 if click_on_button_AllesProduzieren_if_present():
                     print(f"started production on factory {factory_id}.")
                     time.sleep(1)
@@ -556,11 +599,20 @@ def fetch_goods_from_factory(factory_id: int, maximal_time: int) -> None:
             start_time = datetime.datetime.now()
             while True:
                 print(f"trying to fetch goods from factory {factory_id}.  {maximal_time = }")
+                if click_on_button_Abholen_if_present():
+                    click_on_button_repair_factory(factory_id)
+                    print(f"fetched goods from production slot of factory {factory_id}.")
+                    print(f"repaired factory {factory_id}.")
+                    time.sleep(1)
                 if click_on_button_AllesAbholen_if_present():
                     click_on_button_repair_factory(factory_id)
                     print(f"fetched goods from factory {factory_id}.")
                     print(f"repaired factory {factory_id}.")
                     time.sleep(1)
+                if click_on_button_Produzieren_if_present():
+                    print(f"started production on slot of factory {factory_id}.")
+                    time.sleep(1)
+                    break
                 if click_on_button_AllesProduzieren_if_present():
                     print(f"started production on factory {factory_id}.")
                     time.sleep(1)
@@ -694,6 +746,6 @@ if __name__ == "__main__":
     fetch_automation_main(user="Jerenity")
     # fetch_automation_main(user="Nissinissi")
     # learn_and_click()
-    # save_region_as_png_by_two_clicks("assets/toInspectXXX.png")
+    # save_region_as_png_by_two_clicks("assets/XXX.png")
     # click_on_button_Close_if_present()
-    # cut_image("assets/areaTäglichesAngebot.png", 2, 4, 3, 1)
+    # cut_image("assets/XXX.png", 1, 1, 1, 1)
