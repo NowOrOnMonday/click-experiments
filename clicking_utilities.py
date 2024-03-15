@@ -1,3 +1,5 @@
+import datetime
+
 import pyautogui
 # from pynput.mouse import Listener, Button
 # import os
@@ -191,10 +193,10 @@ def click_on_factory(factory_id: int) -> bool:
         pyautogui.click(x, y)
         time.sleep(1)
         result = True
-        print(f'clicked on factory {factory_id}.')
+        print(f'clicked on factory {factory_id} =============')
     else:
         result = False
-        print(f'factory {factory_id} not found.')
+        print(f'factory {factory_id} not found =============')
     return result
 
 
@@ -528,30 +530,57 @@ def learn_and_click() -> None:
     print("finished main")
 
 
-def fetch_goods_from_factory(factory_id: int) -> None:
+def fetch_goods_from_factory(factory_id: int, maximal_time: int) -> None:
+    start_time: int
+    end_time: int
+    elapsed_time: int
     if click_on_factory(factory_id):
         time.sleep(1)
         click_on_button_repair_factory(factory_id)
         time.sleep(1)
-        while True:
-            if click_on_button_AllesAbholen_if_present():
-                time.sleep(1)
-                click_on_button_repair_factory(factory_id)
-                time.sleep(1)
-            elif click_on_button_AllesProduzieren_if_present():
-                time.sleep(1)
-                break
-            else:
-                print(f"factory {factory_id} not ready for fetching goods. waiting 3 seconds.")
+        if maximal_time == 0:   # wait until ready to fetch goods
+            while True:
+                print(f"trying to fetch goods from factory {factory_id}.  {maximal_time = }")
+                if click_on_button_AllesAbholen_if_present():
+                    click_on_button_repair_factory(factory_id)
+                    print(f"fetched goods from factory {factory_id}.")
+                    print(f"repaired factory {factory_id}.")
+                    time.sleep(1)
+                if click_on_button_AllesProduzieren_if_present():
+                    print(f"started production on factory {factory_id}.")
+                    time.sleep(1)
+                    break
+                print(f"factory {factory_id} not finished. waiting 3 seconds.  {maximal_time = }")
+                time.sleep(3)
+        else:   # wait at most try_time seconds
+            start_time = datetime.datetime.now()
+            while True:
+                print(f"trying to fetch goods from factory {factory_id}.  {maximal_time = }")
+                if click_on_button_AllesAbholen_if_present():
+                    click_on_button_repair_factory(factory_id)
+                    print(f"fetched goods from factory {factory_id}.")
+                    print(f"repaired factory {factory_id}.")
+                    time.sleep(1)
+                if click_on_button_AllesProduzieren_if_present():
+                    print(f"started production on factory {factory_id}.")
+                    time.sleep(1)
+                    break
+                end_time = datetime.datetime.now()
+                elapsed_time = (end_time - start_time).seconds
+                print(f"factory {factory_id} not finished.  {elapsed_time = }  {maximal_time = }")
+                if elapsed_time > maximal_time:
+                    print(f"reached maximal fetch time. factory {factory_id} stopped.")
+                    break
+                print(f"waiting 3 seconds.")
                 time.sleep(3)
     else:
-        print(f'factory {factory_id} not found.')
+        print(f'factory {factory_id} not found =============')
 
 
-def fetch_goods_from_current_pane(current_pane_fetch_plan) -> None:
+def fetch_goods_from_current_pane(current_pane_fetch_plan: list) -> None:
     for factory_id in range(1, 7):
-        if current_pane_fetch_plan[factory_id-1]:
-            fetch_goods_from_factory(factory_id)
+        if current_pane_fetch_plan[factory_id-1] >= 0:
+            fetch_goods_from_factory(factory_id, current_pane_fetch_plan[factory_id-1])
         else:
             print(f'factory {factory_id} ignored.')
         time.sleep(2)
@@ -609,8 +638,8 @@ def fetch_color_palettes(number_of_first_pane: int, pane_fetch_plan: list):
         time.sleep(1)
         click_on_button_JumpToMarketplace_if_present
         time.sleep(3)
-        enter_warehouse_and_delete_colorpalettes()
-        time.sleep(3)
+        # enter_warehouse_and_delete_colorpalettes()
+        # time.sleep(3)
     else:
         print("area Factory not found. no click.")
 
@@ -636,19 +665,17 @@ def fetch_automation_main(user: str) -> None:
         elif click_on_button_JumpToMarketplace_if_present():
             time.sleep(3)
             if user == "Jerenity":
-                number_of_first_pane = 5
+                number_of_first_pane = 1 # 14
                 pane_fetch_plan = [
-                    [True, True, True, True, True, True],
-                    [True, True, True, True, True, True],
-                    [True, True, True, True, True, True],
-                    [True, True, True, True, True, True]
+                    [-1, -1, 10, 10, 10, 10],
+                    [10, 10, 10, 10, 10, 10],
+                    [10, 10, 10, 10, 10, 10],
+                    [10, 10, 10, 10, 10, 10]
                 ]
             elif user == "Nissinissi":
                 number_of_first_pane = 5
                 pane_fetch_plan = [
-                    [True, True, True, True, True, True],
-                    [True, True, True, True, True, True],
-                    [True, True, True, True, True, False]
+                    [-1, 0, 10, -1, -1, -1]
                 ]
             else:
                 print(f"fatal error: unknown user {user}.")
@@ -664,9 +691,9 @@ def fetch_automation_main(user: str) -> None:
 
 
 if __name__ == "__main__":
-    # fetch_automation_main(user="Jerenity")
+    fetch_automation_main(user="Jerenity")
     # fetch_automation_main(user="Nissinissi")
-    learn_and_click()
+    # learn_and_click()
     # save_region_as_png_by_two_clicks("assets/toInspectXXX.png")
     # click_on_button_Close_if_present()
     # cut_image("assets/areaTäglichesAngebot.png", 2, 4, 3, 1)
